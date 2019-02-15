@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.views.generic import View
 from blog.models import Post
-from .models import PostUser
+from .models import PostUser, PostRead
 from django.urls import reverse
 
 # Create your views here.
@@ -15,7 +15,11 @@ def feed_fav_list(request):
     l=[]
     for i in pu:
         l.append(i.subs_id)
-    posts = Post.objects.filter(user_id__in=l)
+    pr = PostRead.objects.filter(user_id=request.user.id)
+    l2=[]
+    for i in pr:
+        l2.append(i.post_id)
+    posts = Post.objects.filter(user_id__in=l).exclude(id__in=l2)
     return render(request, 'feed/index.html', context={'posts': posts})
 
 def subscribeuser(request, userid):

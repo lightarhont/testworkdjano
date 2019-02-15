@@ -18,7 +18,6 @@ class Post(models.Model):
     introtext = models.TextField(blank=True, db_index=True)
     fulltext = models.TextField(blank=True, db_index=True)
     created = models.DateTimeField(auto_now_add=True)
-    readed = models.TextField(blank=True, db_index=True)
     
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     
@@ -27,7 +26,6 @@ class Post(models.Model):
     
     def save(self, *args, **kwargs):
         if not self.id:
-            self.readed = '[]'
             self.user_id = get_current_user().id
             self.slug = gen_slug(self.title)
         super().save(*args, **kwargs)

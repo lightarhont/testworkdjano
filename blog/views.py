@@ -5,7 +5,7 @@ from .models import Post
 from .forms import PostForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .utils import *
-import json
+from feed.models import PostRead as PR
 
 # Create your views here.
 
@@ -15,7 +15,8 @@ def post_list(request, userid):
 class PostDetail(View):
     def get(self, request, slug):
         post = get_object_or_404(Post, slug__iexact=slug)
-        if request.user.id and request.user.id in json.loads(post.readed):
+        pr = PR.objects.filter(post_id=post.id).filter(user_id=request.user.id).count()
+        if request.user.id and pr != 0:
             readed=True
         else:
             readed=False
@@ -64,9 +65,7 @@ class PostDelete(OwnerRequiredMixin, View):
 class PostRead(View):
     def post(self, request, slug, userid):
         post = Post.objects.get(slug__iexact=slug)
-        l = json.loads(post.readed)
-        l.append(userid)
-        post.readed = json.dumps(l)
-        post.save()
+        pr = PR(post_id=post.id, user_id=userid)
+        pr.save()
         return redirect(reverse('feed_list_url'))
     
