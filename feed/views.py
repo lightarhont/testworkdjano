@@ -30,7 +30,7 @@ def subscribeuser(request, userid):
         'subsribestatus': pu})
 
 def subscribelist(request):
-    posts = Post.objects.all()
+    posts = Post.objects.all().order_by('-id')
     return render(request, 'feed/index.html', context={'posts': posts})
 
 class ToSubscribe(View):
@@ -43,4 +43,6 @@ class UnSubscribe(View):
     def post(self, request, userid):
         pu = PostUser.objects.filter(subs_id=userid).filter(user_id=request.user.id)
         pu.delete()
+        pr = PostRead.objects.filter(user_id=request.user.id).all()
+        pr.delete()
         return redirect(reverse('feed_list_url'))
