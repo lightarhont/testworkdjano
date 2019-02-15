@@ -27,6 +27,7 @@ class Post(models.Model):
     
     def save(self, *args, **kwargs):
         if not self.id:
+            self.readed = '[]'
             self.user_id = get_current_user().id
             self.slug = gen_slug(self.title)
         super().save(*args, **kwargs)

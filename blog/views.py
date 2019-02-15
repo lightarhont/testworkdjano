@@ -5,6 +5,7 @@ from .models import Post
 from .forms import PostForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .utils import *
+import json
 
 # Create your views here.
 
@@ -14,7 +15,11 @@ def post_list(request, userid):
 class PostDetail(View):
     def get(self, request, slug):
         post = get_object_or_404(Post, slug__iexact=slug)
-        return render(request, 'blog/detail.html', context={'post': post})
+        if request.user.id and request.user.id in json.loads(post.readed):
+            readed=True
+        else:
+            readed=False
+        return render(request, 'blog/detail.html', context={'post': post, 'readed': readed})
 
 class PostCreate(LoginRequiredMixin, View):
     raise_exception = True
@@ -55,5 +60,13 @@ class PostDelete(OwnerRequiredMixin, View):
         post = Post.objects.get(slug__iexact=slug)
         post.delete()
         return redirect(reverse('post_list_url', kwargs={'userid': request.user.id}))
-        
+
+class PostRead(View):
+    def post(self, request, slug, userid):
+        post = Post.objects.get(slug__iexact=slug)
+        l = json.loads(post.readed)
+        l.append(userid)
+        post.readed = json.dumps(l)
+        post.save()
+        return redirect(reverse('feed_list_url'))
     
