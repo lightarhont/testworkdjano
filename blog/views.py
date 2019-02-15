@@ -15,11 +15,14 @@ def post_list(request, userid):
 class PostDetail(View):
     def get(self, request, slug):
         post = get_object_or_404(Post, slug__iexact=slug)
-        pr = PR.objects.filter(post_id=post.id).filter(user_id=request.user.id).count()
-        if request.user.id and pr != 0:
-            readed=True
+        if request.user.id:
+            pr = PR.objects.filter(post_id=post.id).filter(user_id=request.user.id).count()
+            if pr != 0:
+                readed=True
+            else:
+                readed=False
         else:
-            readed=False
+            readed=True
         return render(request, 'blog/detail.html', context={'post': post, 'readed': readed})
 
 class PostCreate(LoginRequiredMixin, View):
