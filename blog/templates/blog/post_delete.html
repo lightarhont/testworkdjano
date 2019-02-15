@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block title %}
+
+Post Delete - {{ post.title }}
+
+{% endblock %}
+
+{% block content %}
+<form method="post" action="{% url 'post_delete_url' slug=post.slug  userid=request.user.id %}">
+    {% csrf_token %}
+    <h3>Вы собираетесь удалить запись блога, уверены?</h3>
+    <button type="submit" class="btn btn-danger">Удалить</button>
+    
+</form>
+{% endblock %}

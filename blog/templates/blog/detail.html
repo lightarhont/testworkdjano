@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block title %}
+{{post.title}}
+{% endblock %}
+
+{% block content %}
+    {% if request.user.is_authenticated and post.user_id == request.user.id %}
+        <div class="container mt-5">
+          <div class="row">
+                <div class="col-6 offset-md-2">
+                    <a href="{% url 'post_update_url' slug=post.slug userid=request.user.id %}" class="btn btn-primary">Редактировать</a>
+                    <a href="{% url 'post_delete_url' slug=post.slug userid=request.user.id %}" class="btn btn-danger">Удалить</a>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+    <h1 class="mt-5">
+        {{post.title}}
+    </h1>
+    <p>
+        {{post.fulltext}}
+    </p>
+{% endblock %}

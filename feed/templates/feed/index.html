@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Лента
+{% endblock %}
+{% block content %}
+
+    <h1 class="mb-5">Лента</h1>
+    {% for post in posts %}
+        <div class="card">
+            <div class="card-header">
+                <div style="float: left;">
+                {{ post.created }}
+                </div>
+                <div style="float: right;">
+                    <a href="{% url 'subscribe_user_url' userid=post.user_id %}">{{ post.user.username }}</a>
+                </div>
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">{{ post.title }}</h5>
+                <p class="card-text">{{ post.introtext }}</p>
+                <a href="{% url 'post_detail_url' slug=post.slug %}" class="btn btn-primary">Go somewhere</a>
+            </div>
+        </div>
+    {% endfor %}
+
+{% endblock %}
