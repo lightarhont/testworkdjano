@@ -7,11 +7,11 @@ from django.urls import reverse
 # Create your views here.
 
 def feed_list(request):
-    posts = Post.objects.all()
+    posts = Post.objects.all().order_by('-id')
     return render(request, 'feed/index.html', context={'posts': posts})
 
 def feed_fav_list(request):
-    pu = PostUser.objects.filter(user_id=request.user.id).all()
+    pu = PostUser.objects.filter(user_id=request.user.id).all().order_by('-id')
     l=[]
     for i in pu:
         l.append(i.subs_id)
