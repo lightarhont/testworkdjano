@@ -1,1 +1,2 @@
-print('test complite!')
+def template_string():
+    print('test complite!')
