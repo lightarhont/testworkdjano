@@ -1,2 +1,3 @@
-def template_string():
-    print('test complite!')
+import os
+
+print(os.listdir())
